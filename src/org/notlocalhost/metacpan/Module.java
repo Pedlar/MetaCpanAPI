@@ -1,7 +1,6 @@
 package org.notlocalhost.metacpan;
 
-public class Module {
-    private String author;
+public class Module extends MetaObject {
     private String pod;
     private String status;
     private String date;
