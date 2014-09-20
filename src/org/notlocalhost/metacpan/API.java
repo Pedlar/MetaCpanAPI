@@ -56,4 +56,34 @@ public class API {
                           body.getString ("abstract")
                          );
     }
+    
+    public static Object checkValue(JSONObject obj, String key) {
+        try {
+            return obj.has(key) ? obj.get(key) : null;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+    
+    public static Author fetchAuthor(String author) throws ClientProtocolException, IOException, JSONException {
+        initClient();
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        HttpGet httpGet = new HttpGet(baseUrl + "/author/" + author);
+        HttpResponse response = httpClient.execute(httpGet);
+        
+        response.getEntity().writeTo(byteStream);
+        JSONObject body = new JSONObject(byteStream.toString());
+        if(body.has("code") && body.getInt("code") == 404) {
+            return null;
+        }
+        return new Author((String)checkValue(body, "country"),
+                          body.getJSONArray("website").length() > 0 ? (String)body.getJSONArray("website").get(0) : "",
+                          (String)checkValue(body, "gravatar_url"),
+                          body.getString ("name"),
+                          body.getString ("dir"),
+                          (String)body.getJSONArray("email").get(0),
+                          (String)checkValue(body, "city"),
+                          body.getString ("pauseid")
+                         );
+    }
 }

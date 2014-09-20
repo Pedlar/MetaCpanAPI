@@ -4,5 +4,4 @@ class MetaObject {
     protected String author;
     protected String name;
     
-    
 }
