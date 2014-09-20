@@ -1,0 +1,22 @@
+# Directories
+bin/
+gen/
+build/
+
+.DS_Store
+
+local.properties
+
+*.swp
+*.ap_
+*.dex
+*.class
+*.R.java
+
+proguard/
+
+.gradle/
+
+.idea/
+*.iml
+
