@@ -1,4 +1,7 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = "org.notlocalhost.metacpan.Main"
 
 repositories {
     mavenCentral()
@@ -6,4 +9,5 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.squareup.retrofit:retrofit:1.6.1'
 }
