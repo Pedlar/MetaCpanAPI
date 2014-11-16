@@ -2,12 +2,15 @@ package org.notlocalhost.metacpan.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.notlocalhost.metacpan.MetaCpan;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by pedlar on 9/20/14.
  */
-public final class Release {
+public final class Release implements Serializable {
     private String status;
     private String date;
     private String author;
@@ -22,7 +25,6 @@ public final class Release {
     @SerializedName("abstract")
     private String _abstract;
 
-    private List<String> license;
     private List<String> provides;
 
     private float version_numified;
@@ -32,7 +34,7 @@ public final class Release {
 
     private List<ReleaseDependency> dependency;
 
-    public final static class ReleaseDependency {
+    public final static class ReleaseDependency implements Serializable {
         private String relationship;
         private String phase;
         private String version;
@@ -116,9 +118,6 @@ public final class Release {
         return _abstract;
     }
 
-    public List<String> getLicense() {
-        return license;
-    }
 
     public List<String> getProvides() {
         return provides;
@@ -134,6 +133,10 @@ public final class Release {
 
     public boolean isFirst() {
         return first;
+    }
+
+    public float getRating() {
+        return MetaCpan.instance().getRating(getDistribution());
     }
 
     public List<ReleaseDependency> getDependencies() {
@@ -154,7 +157,6 @@ public final class Release {
                 ", name='" + name + '\'' +
                 ", distribution='" + distribution + '\'' +
                 ", _abstract='" + _abstract + '\'' +
-                ", license=" + license +
                 ", provides=" + provides +
                 ", version_numified=" + version_numified +
                 ", authorized=" + authorized +

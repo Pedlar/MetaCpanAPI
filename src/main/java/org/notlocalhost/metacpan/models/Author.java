@@ -1,9 +1,10 @@
 package org.notlocalhost.metacpan.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Author extends MetaObject {
+public final class Author extends MetaObject implements Serializable {
     private String country;
     private List<String> website = new ArrayList<String>();
     private String gravatar_url; 
@@ -11,6 +12,9 @@ public final class Author extends MetaObject {
     private List<String> email = new ArrayList<String>();
     private String city;
     private String pauseid;
+
+    private ReleaseSearch release;
+    private List<Release> releaseList;
     
     public String getCountry() {
         return this.country;
@@ -35,6 +39,22 @@ public final class Author extends MetaObject {
     }
     public String getPauseId() {
         return this.pauseid;
+    }
+    public List<Release> getReleases() {
+        if(releaseList == null) {
+            releaseList = new ArrayList<Release>();
+            if (release != null) {
+                ReleaseSearch.ReleaseHits hits = release.hits;
+                if (hits != null) {
+                    if (hits.hits != null) {
+                        for (ReleaseSearch.ReleaseHitsWrapper hit : hits.hits) {
+                            releaseList.add(hit.release);
+                        }
+                    }
+                }
+            }
+        }
+        return releaseList;
     }
 
     @Override

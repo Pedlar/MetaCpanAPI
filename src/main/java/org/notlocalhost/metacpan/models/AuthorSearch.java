@@ -16,7 +16,6 @@ public final class AuthorSearch {
 
     public class AuthorHitsWrapper {
         @SerializedName("_source")
-        public
-        Author author;
+        public Author author;
     }
 }

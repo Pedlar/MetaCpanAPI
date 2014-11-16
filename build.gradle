@@ -1,5 +1,18 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
+
+apply plugin: 'maven'
+apply plugin: 'nexus'
 
 mainClassName = "org.notlocalhost.metacpan.Main"
 
@@ -10,4 +23,60 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.retrofit:retrofit:1.6.1'
+}
+
+group = 'org.notlocalhost.metacpan'
+version = '0.1-SNAPSHOT'
+artifactId = 'cpan-api'
+artifact_name = 'MetaCPAN API'
+artifact_description = 'A Java Library to interact with MetaCPAN'
+artifact_url = 'https://github.com/Pedlar/MetaCpanAPI'
+
+
+install {
+    repositories.mavenInstaller {
+        pom.artifactId = artifactId
+    }
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.artifactId = artifactId
+    }
+}
+
+modifyPom {
+    project {
+        name artifact_name
+        description artifact_description
+        url artifact_url
+        inceptionYear '2013'
+
+        scm {
+            url artifact_url
+            connection 'scm:git:git://github.com/pedlar/gradle-calabash-android-plugin.git'
+            developerConnection 'scm:git:ssh://git@github.com/pedlar/gradle-calabash-android-plugin.git'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'pedlar'
+                name 'Pedlar'
+                email 'pedlar88@gmail.com'
+            }
+        }
+
+        organization {
+            name 'NotLocalHost'
+            url 'http://notlocalhost.org'
+        }
+    }
 }

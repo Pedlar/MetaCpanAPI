@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.notlocalhost.metacpan.models.MetaObject;
 
-public final class Module extends MetaObject {
+import java.io.Serializable;
+
+public final class Module extends MetaObject implements Serializable {
     private String pod;
     private String status;
     private String date;

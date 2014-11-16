@@ -16,7 +16,6 @@ public final class ReleaseSearch {
 
     public class ReleaseHitsWrapper {
         @SerializedName("_source")
-        public
-        Release release;
+        public Release release;
     }
 }
