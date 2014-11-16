@@ -2,6 +2,8 @@ package org.notlocalhost.metacpan;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
 
 import org.notlocalhost.metacpan.models.Author;
 import org.notlocalhost.metacpan.models.AuthorSearch;
@@ -13,12 +15,15 @@ import org.notlocalhost.metacpan.services.MetaApiService;
 
 import java.io.BufferedInputStream;
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 /**
@@ -35,12 +40,49 @@ public final class MetaCpan {
                 .build();
     }
 
+    private MetaCpan(File cacheDir) {
+        File httpCacheDirectory = new File(cacheDir, "responses");
+
+        Cache httpResponseCache = null;
+        try {
+            httpResponseCache = new Cache(httpCacheDirectory, 10 * 1024 * 1024);
+        } catch (IOException e) {
+
+        }
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setCache(httpResponseCache);
+
+        mRestAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.metacpan.org/v0")
+                .setConverter(new GsonConverter(new Gson()))
+                .setRequestInterceptor(requestInterceptor)
+                .setClient(new OkClient(okHttpClient))
+                .build();
+    }
+
     public static MetaCpan instance() {
         if(mInstance == null) {
             mInstance = new MetaCpan();
         }
         return mInstance;
     }
+
+    public static MetaCpan instance(File cacheDir) {
+        if(mInstance == null) {
+            mInstance = new MetaCpan(cacheDir);
+        }
+        return mInstance;
+    }
+
+    private RequestInterceptor requestInterceptor = new RequestInterceptor() {
+        @Override
+        public void intercept(RequestFacade request) {
+            int maxAge = 60 * 60; // read from cache for an hour
+            int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+            request.addHeader("Cache-Control", "public, max-stale=" + maxStale + ", max-age=" + maxAge);
+        }
+    };
 
     public void setLogLevel(RestAdapter.LogLevel logLevel) {
         mRestAdapter.setLogLevel(logLevel);

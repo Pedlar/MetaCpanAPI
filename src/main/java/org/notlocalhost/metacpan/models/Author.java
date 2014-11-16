@@ -12,9 +12,6 @@ public final class Author extends MetaObject implements Serializable {
     private List<String> email = new ArrayList<String>();
     private String city;
     private String pauseid;
-
-    private ReleaseSearch release;
-    private List<Release> releaseList;
     
     public String getCountry() {
         return this.country;
@@ -39,22 +36,6 @@ public final class Author extends MetaObject implements Serializable {
     }
     public String getPauseId() {
         return this.pauseid;
-    }
-    public List<Release> getReleases() {
-        if(releaseList == null) {
-            releaseList = new ArrayList<Release>();
-            if (release != null) {
-                ReleaseSearch.ReleaseHits hits = release.hits;
-                if (hits != null) {
-                    if (hits.hits != null) {
-                        for (ReleaseSearch.ReleaseHitsWrapper hit : hits.hits) {
-                            releaseList.add(hit.release);
-                        }
-                    }
-                }
-            }
-        }
-        return releaseList;
     }
 
     @Override

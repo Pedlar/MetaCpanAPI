@@ -21,7 +21,7 @@ public interface MetaApiService {
     @GET("/module/{module}/")
     public Module getModule(@Path("module") String moduleName);
 
-    @GET("/author/{author}/?join=release")
+    @GET("/author/{author}/")
     public Author getAuthor(@Path("author") String author);
 
     @GET("/pod/{module}/")
